@@ -43,13 +43,45 @@ while not browser.current_url.startswith("http://ehall.seu.edu.cn/qljfwapp2/sys/
     pass
 
 print(browser.current_url)
+'''
+addNew = browser.find_elements_by_class_name("mint-button")
+addNewBtn = None
+for i in addNew:
+    if i.text.find("新增") != -1:
+        addNewBtn = i
+        break
+if not addNewBtn:
+    print("网页似乎加载失败了……")
+    exit(1)
+addNewBtn.click()
+'''
+browser.get("http://ehall.seu.edu.cn/qljfwapp2/sys/lwReportEpidemicSeu/*default/index.do#/add")
+browser.implicitly_wait(8)
 
-print(send_request(browser, "http://ehall.seu.edu.cn/qljfwapp2/sys/lwReportEpidemicSeu/mobile/dailyReport.do", "{ \"*json\": 1}"))
+submits = browser.find_elements_by_class_name("mint-button")
+submitBtn = None
+for i in submits:
+    if i.text.find("提交") != -1:
+        submitBtn = i
+        break
+print("text: ", submitBtn.text)
+
+if not submitBtn:
+    print("网页似乎加载失败了……")
+    exit(2)
+submitBtn.click()
+
+
+submit_confirm = False
+while not submit_confirm:
+    submit_confirm = browser.find_element_by_class_name("mint-msgbox-confirm")
+submit_confirm.click()
 
 print("已填报，刷新即可看到填报。")
 
-browser.refresh()
+#
 
 browser.implicitly_wait(15)
+browser.refresh()
 browser.quit()
 os.system('pause')
